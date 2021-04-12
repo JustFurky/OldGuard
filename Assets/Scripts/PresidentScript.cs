@@ -21,6 +21,16 @@ public class PresidentScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag=="Rocket")
+        {
+            Life = 0;
+            MySlider.value = Life;
+            other.transform.GetChild(0).gameObject.SetActive(false);
+            other.transform.GetChild(1).gameObject.SetActive(false);
+            other.transform.GetChild(2).gameObject.SetActive(true);
+            other.transform.GetChild(3).gameObject.SetActive(false);
+            StartCoroutine(Failed());
+        }
         if (other.tag == "ThrowObject")
         {
             other.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
