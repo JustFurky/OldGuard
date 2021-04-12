@@ -8,11 +8,18 @@ public class GuardScript : MonoBehaviour
     public Material Orange;
     public Material Red;
     public GameObject Shield;
-    public bool startGuard=false;
+    public bool startGuard = false;
     public int PositionIndex;
-    int ThrowHit = 3;
+    public int ThrowHit = 3;
     GameObject World;
-   
+    public List<GameObject> Chields = new List<GameObject>();
+    public Material[] HoloMat;
+    public Material[] SkinMat;
+    public Material[] ShieldMats;
+    bool go = false;
+    public Transform[] Positions;
+    public SkinnedMeshRenderer CharacterSkin;
+
     private void Start()
     {
         World = GameObject.FindGameObjectWithTag("World");
@@ -21,16 +28,52 @@ public class GuardScript : MonoBehaviour
             transform.GetComponent<Animator>().SetTrigger("GuardWalk");
         }
     }
+    private void Update()
+    {
+        if (go==true)
+        {
+            transform.DOLocalMove(transform.parent.transform.position, 1);
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag=="GuardYedek")
+        // if (other.gameObject.tag=="Finish")
+        // {
+        //     transform.GetComponent<Animator>().SetTrigger("BreathIddle");
+        // }
+        if (other.tag == "Rocket")
         {
-            if (GameManager.Instance.characterMove.IsAllFull()<3)
+            ThrowHit++;
+            GameManager.Instance.characterMove.AllDeath = true;
+            other.gameObject.transform.GetComponent<BoxCollider>().enabled = false;
+            other.transform.GetChild(0).gameObject.SetActive(false);
+            other.transform.GetChild(1).gameObject.SetActive(false);
+            other.transform.GetChild(2).gameObject.SetActive(true);
+            other.transform.GetChild(3).gameObject.SetActive(false);
+            other.transform.GetChild(2).gameObject.transform.parent=null;
+            Shield.transform.GetComponent<MeshRenderer>().material = Red;
+            if (GameManager.Instance.characterMove.CollectedGuards.Count > 0)
             {
-                GameManager.Instance.characterMove.MoveCollecterdGuards(GameManager.Instance.characterMove.IsAllFull(),other.gameObject);
+                GameManager.Instance.characterMove.MoveBackupGuards(PositionIndex);
+                transform.parent = null;
+                GetComponent<Animator>().SetTrigger("Die");
             }
             else
             {
+                GameManager.Instance.characterMove.MainGuards[PositionIndex - 1] = false;
+                transform.parent = null;
+                GetComponent<Animator>().SetTrigger("Die");
+            }
+        }
+        if (other.gameObject.tag == "GuardYedek")
+        {
+            if (GameManager.Instance.characterMove.IsAllFull() < 3)
+            {
+                GameManager.Instance.characterMove.MoveCollecterdGuards(GameManager.Instance.characterMove.IsAllFull(), other.gameObject);
+            }
+            else
+            {
+                other.transform.GetComponent<GuardScript>().MaterialChangeHolo();
                 GameManager.Instance.characterMove.CollectGuard(other.gameObject);
             }
         }
@@ -44,15 +87,14 @@ public class GuardScript : MonoBehaviour
             ThrowHit--;
             if (ThrowHit == 2)
             {
-                Shield.transform.GetComponent<MeshRenderer>().material= Orange;
+                Shield.transform.GetComponent<MeshRenderer>().material = Orange;
             }
-            if (ThrowHit==1)
+            if (ThrowHit == 1)
             {
-                Shield.transform.GetComponent<MeshRenderer>().material=Red;
+                Shield.transform.GetComponent<MeshRenderer>().material = Red;
             }
             if (ThrowHit == 0)
             {
-               // Shield.transform.parent = null;//tercihe göre kapatılacak
                 if (GameManager.Instance.characterMove.CollectedGuards.Count > 0)
                 {
                     GameManager.Instance.characterMove.MoveBackupGuards(PositionIndex);
@@ -62,10 +104,28 @@ public class GuardScript : MonoBehaviour
                 else
                 {
                     GameManager.Instance.characterMove.MainGuards[PositionIndex - 1] = false;
-                    transform.parent = World.transform;
+                    transform.parent = null;
                     GetComponent<Animator>().SetTrigger("Die");
                 }
             }
+        }
+    }
+    public void MaterialChangeHolo()
+    {
+        Shield.transform.GetComponent<MeshRenderer>().materials = HoloMat;
+        CharacterSkin.materials = HoloMat;
+        for (int i = 0; i < Chields.Count; i++)
+        {
+            Chields[i].SetActive(false);
+        }
+    }
+    public void MaterialChangeNormal()
+    {
+        Shield.transform.GetComponent<MeshRenderer>().materials = ShieldMats;
+        CharacterSkin.materials = SkinMat;
+        for (int i = 0; i < Chields.Count; i++)
+        {
+            Chields[i].SetActive(true);
         }
     }
 }

@@ -9,6 +9,9 @@ TagManager:
   - ThrowObject
   - President
   - World
+  - Canvas
+  - FxTemporaire
+  - Rocket
   layers:
   - Default
   - TransparentFX

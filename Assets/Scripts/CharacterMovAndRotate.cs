@@ -10,16 +10,25 @@ public class CharacterMovAndRotate : MonoBehaviour
     public FloatingJoystick MyJoystick;
     public GameObject Character;
     public List<GameObject> GuardsYedekPos = new List<GameObject>();
-    public List<GameObject> CollectedGuards=new List<GameObject>();
+    public List<GameObject> CollectedGuards = new List<GameObject>();
     [HideInInspector]
     public bool[] MainGuards;
     public Transform[] GuardsPositions;
     int siraIndex = 0;
     public GameObject Guards;
     public GameObject World;
-    bool Move=false;
+    bool Move = false;
     Transform Target;
     GameObject currentMove;
+    public bool AllDeath = false;
+
+    //Input
+    Vector3 translation2;
+    public float Xspeed = 75;
+    bool isMovementReleased;
+    Vector2 firstPressPos;
+    Touch touch;
+
     private void Start()
     {
         MainGuards = new bool[3];
@@ -33,46 +42,83 @@ public class CharacterMovAndRotate : MonoBehaviour
         if (Move)
         {
             currentMove.transform.LookAt(Target.position);
-            currentMove.transform.position = Vector3.MoveTowards(currentMove.transform.position, Target.position, 0.050f);
+            currentMove.transform.position = Vector3.MoveTowards(currentMove.transform.position, Target.position, 0.1f);
             if (Vector3.Distance(currentMove.transform.position, Target.position) < 0.001f)
             {
+                currentMove.transform.GetComponent<GuardScript>().MaterialChangeNormal();
                 currentMove.GetComponent<Rigidbody>().detectCollisions = true;
-                Move = false;
                 currentMove.transform.localRotation = Quaternion.identity;
+                Move = false;
             }
         }
-        Guards.transform.Rotate(0, MyJoystick.Horizontal*3f,0);
-        transform.Translate(-Vector3.right*Time.deltaTime*4,Space.World);
+#if UNITY_EDITOR
+
+        if (Input.GetMouseButton(0))
+        {
+                translation2 = new Vector3(0, Input.GetAxis("Mouse X") * Time.deltaTime * Xspeed, 0);
+
+                Guards.transform.Rotate(translation2);
+                //Guards.transform.eulerAngles = new Vector3(0, Mathf.Clamp(Guards.transform.eulerAngles.y, 20, 320), 0);
+        }
+
+#elif UNITY_IOS || UNITY_ANDROID
+
+        if (Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Moved)
+            {
+                isMovementReleased = false;
+                Guards.transform.localEulerAngles = new Vector3(0, Guards.transform.localEulerAngles.y + touch.deltaPosition.x * Time.deltaTime *Xspeed, 0);
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                isMovementReleased = true;
+            }
+            else if (touch.phase == TouchPhase.Began)
+            {
+                //save began touch 2d point
+                firstPressPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            }
+        }
+
+#endif
+        //if (MyJoystick.Horizontal < -0.15f)
+        //{
+        //    if (Guards.gameObject.transform.rotation.y > -1f)
+        //    {
+        //        Guards.transform.Rotate(0, -5, 0);
+        //    }
+        //}
+        //if (MyJoystick.Horizontal > 0.15f)
+        //{
+        //    if (Guards.gameObject.transform.rotation.y <= 0.90f)
+        //    {
+        //        Guards.transform.Rotate(0, 5, 0);
+        //    }
+        //}
+        transform.Translate(-Vector3.right * Time.deltaTime * 4, Space.World);
+        Guards.transform.Translate(-Vector3.right * Time.deltaTime * 4, Space.World);
     }
     public void CollectGuard(GameObject NewGuard)
     {
-        if (siraIndex<6)
+        if (siraIndex < 6)
         {
             NewGuard.GetComponent<Animator>().SetTrigger("GuardWalk");
-            NewGuard.transform.parent =null;
+            NewGuard.transform.parent = null;
             NewGuard.transform.GetComponent<Rigidbody>().detectCollisions = false;
             CollectedGuards.Add(NewGuard);//alttaki hız*2 olacak
             NewGuard.transform.parent = GuardsYedekPos[siraIndex].transform;
-
-
-            // // Şöyle bir şey kullanabilirsin
-            // TweenerCore<Vector3, Vector3, VectorOptions> tweenerCore = DOTween.To(() => GuardsYedekPos[siraIndex].transform.position, delegate (Vector3 x)
-            // {
-            //     NewGuard.transform.position += x; // Her framede eklemeleri olarak pozisyonu ekler, yani rotasyonda (dotween rotate de bunun gibi bi şey yaptırtabilirsin yani)
-            // }, GuardsYedekPos[siraIndex].transform.position, 2);
-            // tweenerCore.SetOptions(false).SetTarget(NewGuard);
-
-
-            NewGuard.transform.DOMove(new Vector3(GuardsYedekPos[siraIndex].transform.position.x-4, GuardsYedekPos[siraIndex].transform.position.y, GuardsYedekPos[siraIndex].transform.position.z), 1f).OnComplete(()=>TweenCompeted(NewGuard));
+            NewGuard.transform.DOMove(new Vector3(GuardsYedekPos[siraIndex].transform.position.x - 4, GuardsYedekPos[siraIndex].transform.position.y, GuardsYedekPos[siraIndex].transform.position.z), 1f).OnComplete(() => TweenCompeted(NewGuard));
             NewGuard.transform.DOLookAt(GuardsYedekPos[siraIndex].transform.position, 0.2f);
-            siraIndex++; 
+            siraIndex++;
         }
     }
     void TweenCompeted(GameObject go)
     {
-        go.transform.localRotation=Quaternion.identity;
+        go.transform.localRotation = Quaternion.identity;
     }
-    public void MoveCollecterdGuards(int Index,GameObject Go)
+    public void MoveCollecterdGuards(int Index, GameObject Go)
     {
         Go.GetComponent<Animator>().SetTrigger("GuardWalk");
         Move = true;
@@ -95,22 +141,32 @@ public class CharacterMovAndRotate : MonoBehaviour
         siraIndex--;
         for (int i = 0; i < CollectedGuards.Count; i++)
         {
-            CollectedGuards[i].transform.DOMove(GuardsYedekPos[i].transform.position+new Vector3(-4f,0,0), 1);
+            CollectedGuards[i].transform.DOMove(GuardsYedekPos[i].transform.position + new Vector3(-4f, 0, 0), 1);
+            CollectedGuards[i].transform.parent = GuardsYedekPos[i].transform;
         }
     }
     public void GuardsBackİddle()
     {
         for (int i = 0; i < GuardsPositions.Length; i++)
         {
-            Debug.Log(GuardsPositions[i].name);
-            GuardsPositions[i].transform.GetChild(0).GetComponent<Animator>().SetTrigger("BreathIddle");
+            if (GuardsPositions[i].transform.childCount > 0)
+            {
+                GuardsPositions[i].transform.GetChild(0).GetComponent<Animator>().SetTrigger("BreathIddle");
+            }
+        }
+        for (int i = 0; i < GuardsYedekPos.Count; i++)
+        {
+            if (GuardsYedekPos[i].transform.childCount > 0)
+            {
+                GuardsYedekPos[i].transform.GetChild(0).GetComponent<Animator>().SetTrigger("BreathIddle");
+            }
         }
     }
     public int IsAllFull()
     {
         for (int i = 0; i < MainGuards.Length; i++)
         {
-            if (MainGuards[i]==false)
+            if (MainGuards[i] == false)
             {
                 return (i);
             }

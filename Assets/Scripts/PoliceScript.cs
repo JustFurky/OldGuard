@@ -17,7 +17,6 @@ public class PoliceScript : MonoBehaviour
     IEnumerator AnimTimer()
     {
         MyAnimator.Play("Restrain", -1, Random.Range(0f,1));
-        Debug.Log(MyAnimator.name);
         yield return new WaitForSeconds(Random.Range(3.10f,6.20f));
         if (randomLuck>=4)
         {

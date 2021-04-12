@@ -829,7 +829,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 00f84f580284f2d4d9bf8184434b01f9, type: 2}
+  - {fileID: 2100000, guid: 5ebf10ef0153066488e75ed746859927, type: 2}
   - {fileID: 2100000, guid: 5ebf10ef0153066488e75ed746859927, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1775,6 +1775,24 @@ MonoBehaviour:
   Shield: {fileID: 6254428380496937309}
   startGuard: 0
   PositionIndex: 0
+  Chields:
+  - {fileID: 210474104801582039}
+  - {fileID: 210474104801582033}
+  - {fileID: 210474104801582035}
+  - {fileID: 210474104801582045}
+  - {fileID: 210474104801582043}
+  - {fileID: 210474104801582023}
+  - {fileID: 210474104801582017}
+  HoloMat:
+  - {fileID: 2100000, guid: d87d0e852091fd54c8402bbf8f99229d, type: 2}
+  - {fileID: 2100000, guid: d87d0e852091fd54c8402bbf8f99229d, type: 2}
+  SkinMat:
+  - {fileID: 2100000, guid: 5ebf10ef0153066488e75ed746859927, type: 2}
+  - {fileID: 2100000, guid: 5ebf10ef0153066488e75ed746859927, type: 2}
+  ShieldMats:
+  - {fileID: 2100000, guid: 2e333ba625d3ab341b5f99f5b3cba605, type: 2}
+  - {fileID: 2100000, guid: 473da4bc9b2a18949a461ebf86bb2d93, type: 2}
+  CharacterSkin: {fileID: 210474104813082273}
 --- !u!1 &210474104801582071
 GameObject:
   m_ObjectHideFlags: 0
