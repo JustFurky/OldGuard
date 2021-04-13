@@ -48,6 +48,7 @@ public class CharacterMovAndRotate : MonoBehaviour
                 currentMove.transform.GetComponent<GuardScript>().MaterialChangeNormal();
                 currentMove.GetComponent<Rigidbody>().detectCollisions = true;
                 currentMove.transform.localRotation = Quaternion.identity;
+                currentMove.tag = "Guard";
                 Move = false;
             }
         }
@@ -83,20 +84,6 @@ public class CharacterMovAndRotate : MonoBehaviour
         }
 
 #endif
-        //if (MyJoystick.Horizontal < -0.15f)
-        //{
-        //    if (Guards.gameObject.transform.rotation.y > -1f)
-        //    {
-        //        Guards.transform.Rotate(0, -5, 0);
-        //    }
-        //}
-        //if (MyJoystick.Horizontal > 0.15f)
-        //{
-        //    if (Guards.gameObject.transform.rotation.y <= 0.90f)
-        //    {
-        //        Guards.transform.Rotate(0, 5, 0);
-        //    }
-        //}
         transform.Translate(-Vector3.right * Time.deltaTime * 4, Space.World);
         Guards.transform.Translate(-Vector3.right * Time.deltaTime * 4, Space.World);
     }
@@ -131,7 +118,7 @@ public class CharacterMovAndRotate : MonoBehaviour
     public void MoveBackupGuards(int Index)
     {
         Move = true;
-        CollectedGuards[0].tag = "Guard";
+        //CollectedGuards[0].tag = "Guard";
         Target = GuardsPositions[Index - 1];
         currentMove = CollectedGuards[0];
         CollectedGuards[0].GetComponent<GuardScript>().PositionIndex = Index;
@@ -168,6 +155,7 @@ public class CharacterMovAndRotate : MonoBehaviour
         {
             if (MainGuards[i] == false)
             {
+                Debug.Log(MainGuards[i]);
                 return (i);
             }
         }

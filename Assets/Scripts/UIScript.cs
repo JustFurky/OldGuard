@@ -28,11 +28,13 @@ public class UIScript : MonoBehaviour
     }
     public void WinOpener()
     {
+        GamePanel.SetActive(false);
         FailPanel.SetActive(false);
         CompletePanel.SetActive(true);
     }
     public void FailOpener()
     {
+        GamePanel.SetActive(false);
         FailPanel.SetActive(true);
         CompletePanel.SetActive(false);
     }

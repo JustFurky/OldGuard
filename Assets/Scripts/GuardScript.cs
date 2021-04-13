@@ -43,7 +43,7 @@ public class GuardScript : MonoBehaviour
         // }
         if (other.tag == "Rocket")
         {
-            ThrowHit++;
+            //ThrowHit++;
             GameManager.Instance.characterMove.AllDeath = true;
             other.gameObject.transform.GetComponent<BoxCollider>().enabled = false;
             other.transform.GetChild(0).gameObject.SetActive(false);
@@ -57,12 +57,16 @@ public class GuardScript : MonoBehaviour
                 GameManager.Instance.characterMove.MoveBackupGuards(PositionIndex);
                 transform.parent = null;
                 GetComponent<Animator>().SetTrigger("Die");
+                transform.GetComponent<BoxCollider>().enabled = false;
+                gameObject.tag = "Untagged";
             }
             else
             {
                 GameManager.Instance.characterMove.MainGuards[PositionIndex - 1] = false;
                 transform.parent = null;
                 GetComponent<Animator>().SetTrigger("Die");
+                transform.GetComponent<BoxCollider>().enabled = false;
+                gameObject.tag = "Untagged";
             }
         }
         if (other.gameObject.tag == "GuardYedek")
@@ -103,7 +107,7 @@ public class GuardScript : MonoBehaviour
                 }
                 else
                 {
-                    GameManager.Instance.characterMove.MainGuards[PositionIndex - 1] = false;
+                    GameManager.Instance.characterMove.MainGuards[PositionIndex-1] = false;
                     transform.parent = null;
                     GetComponent<Animator>().SetTrigger("Die");
                 }

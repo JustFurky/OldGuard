@@ -71,34 +71,11 @@ public class PresidentScript : MonoBehaviour
     }
     IEnumerator Failed()
     {
-       // OtherCharacter.SetActive(true);
-       // OtherCharacter.transform.GetComponent<Animator>().SetTrigger("Failed");
-       // OtherCharacter.transform.DOMoveZ(transform.position.z, 2);
         GameManager.Instance.characterMove.enabled = false;
         GameManager.Instance.characterMove.GuardsBackİddle();
-        //transform.GetComponent<Animator>().SetTrigger("Back");
-        //yield return new WaitForSeconds(2);
-        //OtherCharacter.transform.LookAt(transform.position);
-        //OtherCharacter.transform.GetComponent<Animator>().SetTrigger("FailedTwo");
-        //AmmoObject.transform.GetChild(3).gameObject.SetActive(true);
-        //AmmoObject.transform.DOMove(new Vector3(transform.position.x, transform.position.y+2, transform.position.z), 2.2f);
-        //yield return new WaitForSeconds(2f);
-        //AmmoObject.transform.GetChild(0).gameObject.SetActive(false);
-        //AmmoObject.transform.GetChild(1).gameObject.SetActive(false);
-        //AmmoObject.transform.GetChild(2).gameObject.SetActive(true);
-        //AmmoObject.transform.GetChild(3).gameObject.SetActive(false);
         transform.GetComponent<Animator>().SetLayerWeight(1, 0);
         transform.GetComponent<Animator>().SetTrigger("Failed");
         yield return new WaitForSeconds(1f);
         Canvas.transform.GetComponent<UIScript>().FailOpener();
-    }
-    IEnumerator FailedOtherCharacter()
-    {
-        OtherCharacter.SetActive(true);
-        OtherCharacter.transform.GetComponent<Animator>().SetTrigger("Failed");
-        OtherCharacter.transform.DOMoveZ(transform.position.z, 2);
-        yield return new WaitForSeconds(2.1f);
-        OtherCharacter.transform.LookAt(transform.position);
-        OtherCharacter.transform.GetComponent<Animator>().SetTrigger("FailedTwo");
     }
 }
