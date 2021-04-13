@@ -18,7 +18,7 @@ public class UIScript : MonoBehaviour
 
     void Start()
     {
-        //LevelText.text = "Level "+PlayerPrefs.GetInt("LevelIndex").ToString();
+        LevelText.text = "Level "+PlayerPrefs.GetInt("LevelIndex").ToString();
         Barslider.maxValue = Vector3.Distance(Character.transform.position, Finish.transform.position);
         StartDistance = Vector3.Distance(Character.transform.position, Finish.transform.position);
     }

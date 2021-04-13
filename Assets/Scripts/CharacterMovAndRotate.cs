@@ -42,8 +42,8 @@ public class CharacterMovAndRotate : MonoBehaviour
         if (Move)
         {
             currentMove.transform.LookAt(Target.position);
-            currentMove.transform.position = Vector3.MoveTowards(currentMove.transform.position, Target.position, 0.1f);
-            if (Vector3.Distance(currentMove.transform.position, Target.position) < 0.001f)
+            currentMove.transform.position = Vector3.MoveTowards(currentMove.transform.position, Target.position, 0.15f);
+            if (Vector3.Distance(currentMove.transform.position, Target.position) < 0.0001f)
             {
                 currentMove.transform.GetComponent<GuardScript>().MaterialChangeNormal();
                 currentMove.GetComponent<Rigidbody>().detectCollisions = true;
