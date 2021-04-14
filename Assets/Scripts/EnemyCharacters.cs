@@ -6,7 +6,6 @@ public class EnemyCharacters : MonoBehaviour
 {
     GameObject President;
     public GameObject[] ThrowObject;
-    //int maxthrow = 0;
     int random;
     private void Start()
     {
@@ -20,13 +19,6 @@ public class EnemyCharacters : MonoBehaviour
             StartCoroutine(ThrowTimer());
         }
     }
-   // private void OnTriggerExit(Collider other)
-   // {
-   //     if (other.tag=="President")
-   //     {
-   //         StartCoroutine(ThrowTimer());
-   //     }
-   // }
     IEnumerator ThrowTimer()
     {
         transform.LookAt(President.transform.position);

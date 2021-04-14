@@ -7,7 +7,6 @@ public class PoliceScript : MonoBehaviour
     float randomFrame;
     Animator MyAnimator;
     int randomLuck;
-    // Start is called before the first frame update
     void Start()
     {
         randomLuck = Random.Range(0, 5);

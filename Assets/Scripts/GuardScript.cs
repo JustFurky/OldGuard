@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using TapticPlugin;
 public class GuardScript : MonoBehaviour
 {
     public Material Orange;
@@ -23,10 +24,6 @@ public class GuardScript : MonoBehaviour
     private void Start()
     {
         World = GameObject.FindGameObjectWithTag("World");
-        if (startGuard)
-        {
-            transform.GetComponent<Animator>().SetTrigger("GuardWalk");
-        }
     }
     private void Update()
     {
@@ -37,13 +34,10 @@ public class GuardScript : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        // if (other.gameObject.tag=="Finish")
-        // {
-        //     transform.GetComponent<Animator>().SetTrigger("BreathIddle");
-        // }
         if (other.tag == "Rocket")
         {
-            //ThrowHit++;
+            if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+                TapticManager.Impact(ImpactFeedback.Light);
             GameManager.Instance.characterMove.AllDeath = true;
             other.gameObject.transform.GetComponent<BoxCollider>().enabled = false;
             other.transform.GetChild(0).gameObject.SetActive(false);
@@ -83,6 +77,8 @@ public class GuardScript : MonoBehaviour
         }
         if (other.tag == "ThrowObject")
         {
+            if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+                TapticManager.Impact(ImpactFeedback.Light);
             transform.GetComponent<Animator>().SetTrigger("Hit");
             other.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
             other.transform.GetComponent<MeshRenderer>().enabled = false;

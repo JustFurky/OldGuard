@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using TapticPlugin;
 public class PresidentScript : MonoBehaviour
 {
     public Light SpotLight;
@@ -23,6 +23,8 @@ public class PresidentScript : MonoBehaviour
     {
         if (other.tag=="Rocket")
         {
+            if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+                TapticManager.Impact(ImpactFeedback.Light);
             Life = 0;
             MySlider.value = Life;
             other.transform.GetChild(0).gameObject.SetActive(false);
@@ -33,6 +35,8 @@ public class PresidentScript : MonoBehaviour
         }
         if (other.tag == "ThrowObject")
         {
+            if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+                TapticManager.Impact(ImpactFeedback.Light);
             other.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
             other.transform.GetComponent<MeshRenderer>().enabled = false;
             other.transform.GetComponent<Rigidbody>().detectCollisions = false;
@@ -57,6 +61,8 @@ public class PresidentScript : MonoBehaviour
         }
         if (other.tag == "Finish")
         {
+            if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+                TapticManager.Impact(ImpactFeedback.Light);
             StartCoroutine(Complete());
         }
     }

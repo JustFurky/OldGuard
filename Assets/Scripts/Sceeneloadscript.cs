@@ -18,9 +18,9 @@ public class Sceeneloadscript : MonoBehaviour
 
         if (PlayerPrefs.HasKey("LevelIndex"))
         {
-            if (PlayerPrefs.GetInt("LevelIndex") > 3)
+            if (PlayerPrefs.GetInt("LevelIndex") > 5)
             {
-                SceneManager.LoadScene("Level" + Random.Range(1, 3));
+                SceneManager.LoadScene("Level" + Random.Range(2, 5));
             }
             else
             {

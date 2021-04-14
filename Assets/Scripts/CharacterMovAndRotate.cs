@@ -118,7 +118,6 @@ public class CharacterMovAndRotate : MonoBehaviour
     public void MoveBackupGuards(int Index)
     {
         Move = true;
-        //CollectedGuards[0].tag = "Guard";
         Target = GuardsPositions[Index - 1];
         currentMove = CollectedGuards[0];
         CollectedGuards[0].GetComponent<GuardScript>().PositionIndex = Index;
@@ -146,6 +145,17 @@ public class CharacterMovAndRotate : MonoBehaviour
             if (GuardsYedekPos[i].transform.childCount > 0)
             {
                 GuardsYedekPos[i].transform.GetChild(0).GetComponent<Animator>().SetTrigger("BreathIddle");
+            }
+        }
+    }
+
+    public void GuardStartAnim()
+    {
+        for (int i = 0; i < GuardsPositions.Length; i++)
+        {
+            if (GuardsPositions[i].transform.childCount > 0)
+            {
+                GuardsPositions[i].transform.GetChild(0).GetComponent<Animator>().SetTrigger("GuardWalk");
             }
         }
     }

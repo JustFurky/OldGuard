@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TapticPlugin;
 
 public class UIScript : MonoBehaviour
 {
@@ -14,16 +15,38 @@ public class UIScript : MonoBehaviour
     public GameObject Finish;
     public Text LevelText;
     float StartDistance;
+    public GameObject MainGameObject;
+    public GameObject TutorialObject;
+    public GameObject[] RocketMans;
 
+    bool FirstTab = true;
 
     void Start()
     {
         LevelText.text = "Level "+PlayerPrefs.GetInt("LevelIndex").ToString();
         Barslider.maxValue = Vector3.Distance(Character.transform.position, Finish.transform.position);
         StartDistance = Vector3.Distance(Character.transform.position, Finish.transform.position);
+        MainGameObject.transform.GetComponent<CharacterMovAndRotate>().enabled = false;
     }
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (FirstTab==true)
+            {
+                if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+                    TapticManager.Impact(ImpactFeedback.Light);
+                FirstTab = false;
+                TutorialObject.SetActive(false);
+                Character.transform.GetComponent<Animator>().SetTrigger("Start");
+                MainGameObject.transform.GetComponent<CharacterMovAndRotate>().enabled = true;
+                MainGameObject.transform.GetComponent<CharacterMovAndRotate>().GuardStartAnim();
+                for (int i = 0; i < RocketMans.Length; i++)
+                {
+                    RocketMans[i].transform.GetComponent<RocketmanScript>().enabled = true;
+                } 
+            }
+        }
         Barslider.value = StartDistance-Vector3.Distance(Character.transform.position, Finish.transform.position);
     }
     public void WinOpener()
@@ -40,10 +63,12 @@ public class UIScript : MonoBehaviour
     }
     public void NextButton()
     {
+        if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+            TapticManager.Impact(ImpactFeedback.Light);
         PlayerPrefs.SetInt("LevelIndex", PlayerPrefs.GetInt("LevelIndex") + 1);
-        if (PlayerPrefs.GetInt("LevelIndex") > 3)
+        if (PlayerPrefs.GetInt("LevelIndex") > 5)
         {
-            SceneManager.LoadScene("Level" + Random.Range(1, 3));
+            SceneManager.LoadScene("Level" + Random.Range(2, 5));
         }
         else
         {
@@ -52,6 +77,8 @@ public class UIScript : MonoBehaviour
     }
     public void RestartButton()
     {
+        if (PlayerPrefs.GetInt("onOrOffVibration") == 1)
+            TapticManager.Impact(ImpactFeedback.Light);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
